@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestor de Bebidas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .navbar-brand {
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+        
+        .hero-section {
+            background-color: #f8f9fa;
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+        }
+        
+        .table-section {
+            margin-bottom: 3rem;
+        }
+        
+        footer {
+            background-color: #343a40;
+            color: white;
+            padding: 2rem 0;
+        }
+        
+        .social-links a {
+            color: white;
+            font-size: 1.5rem;
+            margin-right: 1rem;
+        }
+        
+        .btn-action {
+            margin-right: 0.5rem;
+        }
+        
+        .search-bar {
+            margin-bottom: 1.5rem;
+        }
+        
+        /* Estilos para notificações */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            max-width: 350px;
+        }
+        
+        /* Estilo para o ícone de carregamento */
+        .loading-icon {
+            display: none;
+            text-align: center;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Cabeçalho -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <img src="logo.png" alt="Logo Distribuidora" height="40" class="d-inline-block align-text-top me-2">
+                Gestor de Bebidas
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="cadastrar-produto.html">Cadastrar Produto</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#lista">Lista de Produtos</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Seção Principal -->
+    <div class="hero-section">
+        <div class="container">
+            <h1>Bem-vindo ao Gestor de Bebidas</h1>
+            <p class="lead">Sistema de gerenciamento de produtos para distribuidoras de bebidas</p>
+            <div class="mt-4">
+                <a href="cadastrar-produto.html" class="btn btn-primary btn-lg">
+                    <i class="fas fa-plus-circle me-2"></i>Cadastrar Novo Produto
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Área de notificação -->
+    <div id="notificationArea" class="notification"></div>
+    
+    <!-- Ícone de carregamento -->
+    <div id="loadingIcon" class="loading-icon">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Carregando...</span>
+        </div>
+        <p>Carregando banco de dados...</p>
+    </div>
+
+    <!-- Tabela de Produtos -->
+    <section id="lista" class="table-section">
+        <div class="container">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h3>Lista de Produtos</h3>
+                </div>
+                <div class="card-body">
+                    <!-- Barra de Pesquisa -->
+                    <div class="search-bar">
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="pesquisaProduto" placeholder="Pesquisar produto...">
+                            <button class="btn btn-primary" type="button">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Tabela de Produtos -->
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th scope="col">ID</th>
+                                    <th scope="col">Nome</th>
+                                    <th scope="col">Categoria</th>
+                                    <th scope="col">Volume</th>
+                                    <th scope="col">Estoque</th>
+                                    <th scope="col">Preço</th>
+                                    <th scope="col">Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Conteúdo será preenchido dinamicamente via JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- Paginação -->
+                    <nav>
+                        <ul class="pagination justify-content-center">
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Anterior</a>
+                            </li>
+                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                            <li class="page-item">
+                                <a class="page-link" href="#">Próxima</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modal de Edição -->
+    <div class="modal fade" id="editarModal" tabindex="-1" aria-labelledby="editarModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-warning text-dark">
+                    <h5 class="modal-title" id="editarModalLabel">Editar Produto</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editarForm">
+                        <div class="mb-3">
+                            <label for="editNome" class="form-label">Nome do Produto</label>
+                            <input type="text" class="form-control" id="editNome">
+                        </div>
+                        <div class="mb-3">
+                            <label for="editCategoria" class="form-label">Categoria</label>
+                            <select class="form-select" id="editCategoria">
+                                <option value="Refrigerante">Refrigerante</option>
+                                <option value="Cerveja">Cerveja</option>
+                                <option value="Destilado">Destilado</option>
+                                <option value="Suco">Suco</option>
+                                <option value="Água">Água</option>
+                                <option value="Energético">Energético</option>
+                                <option value="Outro">Outro</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editVolume" class="form-label">Volume</label>
+                            <div class="input-group">
+                                <input type="number" class="form-control" id="editVolume">
+                                <select class="form-select" id="editUnidadeVolume">
+                                    <option value="ml">ml</option>
+                                    <option value="L">L</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editEstoque" class="form-label">Quantidade em Estoque</label>
+                            <input type="number" class="form-control" id="editEstoque">
+                        </div>
+                        <div class="mb-3">
+                            <label for="editPreco" class="form-label">Preço (R$)</label>
+                            <div class="input-group">
+                                <span class="input-group-text">R$</span>
+                                <input type="number" class="form-control" id="editPreco">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary">Salvar Alterações</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Exclusão -->
+    <div class="modal fade" id="excluirModal" tabindex="-1" aria-labelledby="excluirModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title" id="excluirModalLabel">Confirmar Exclusão</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Tem certeza que deseja excluir o produto <strong></strong>?</p>
+                    <p class="text-danger"><i class="fas fa-exclamation-triangle"></i> Esta ação não pode ser desfeita.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger">Excluir</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Rodapé -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4 mb-md-0">
+                    <h5>Sobre a Distribuidora</h5>
+                    <p>Somos uma distribuidora de bebidas comprometida com a qualidade e satisfação dos nossos clientes. Atuamos no mercado desde 2010.</p>
+                </div>
+                <div class="col-md-4 mb-4 mb-md-0">
+                    <h5>Contato</h5>
+                    <p><i class="fas fa-map-marker-alt"></i> Rua das Bebidas, 123</p>
+                    <p><i class="fas fa-phone"></i> (11) 1234-5678</p>
+                    <p><i class="fas fa-envelope"></i> contato@distribuidora.com</p>
+                </div>
+                <div class="col-md-4">
+                    <h5>Redes Sociais</h5>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+            </div>
+            <hr class="mt-4 mb-4 bg-light">
+            <div class="text-center">
+                <p>&copy; 2023 Distribuidora de Bebidas. Todos os direitos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- SQLite via SQL.js (carregado dinamicamente) -->
+    
+    <!-- Script do banco de dados -->
+    <script src="db.js"></script>
+    
+    <!-- Script de exportação -->
+    <script src="export.js"></script>
+    
+    <!-- Script da aplicação -->
+    <script src="app.js"></script>
+</body>
+</html> 
